@@ -1,227 +1,1955 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport"/>
-  <meta content="#203a2d" name="theme-color"/>
-  <title>
-   GROUND — Run the world around you
-  </title>
-  <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
-  <style>
-   *{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;font-family:'DM Sans',Arial,sans-serif;color:#19291f;background:#dce8d7}.app{height:100%;height:100dvh;position:relative;overflow:hidden}#map{position:absolute;inset:0;background:#dce8d7;z-index:0}.leaflet-container{font:inherit;background:#dce8d7}.file-notice{display:none;position:absolute;z-index:400;left:50%;top:50%;transform:translate(-50%,-50%);width:min(310px,84vw);padding:16px;text-align:center;line-height:1.55;font-size:12px;font-weight:600;color:#28442f;background:#fffdf2ed;border:1px solid white;border-radius:15px;box-shadow:0 5px 18px #29442b20}.file-notice.show{display:block}.leaflet-tile{filter:saturate(.78) sepia(.05)}.leaflet-control-attribution{font-size:9px!important}.leaflet-control-zoom{display:none}header{position:absolute;z-index:500;top:0;left:0;right:0;padding:calc(12px + env(safe-area-inset-top)) 14px 42px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(#eff5ebee,transparent);pointer-events:none}header>*{pointer-events:auto}.brand{font-weight:800;letter-spacing:-.5px;font-size:16px;text-shadow:0 1px white}.brand i{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#19291f;color:#d4f779;font-style:normal;margin-right:4px}.right{display:flex;align-items:center;gap:8px}.xp,.avatar{border:1px solid white;background:#fffdf1ed;box-shadow:0 3px 12px #29442b20}.xp{border-radius:18px;padding:9px 11px;font-size:11px}.avatar{width:38px;height:38px;border-radius:50%;font-size:18px}.area{position:absolute;z-index:490;top:calc(54px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);white-space:nowrap;text-align:center;background:#fffdf1ed;border:1px solid white;border-radius:20px;padding:7px 13px;box-shadow:0 3px 12px #29442b20}.area b,.area small{display:block}.area b{font-size:11px}.area small{font:8px 'DM Mono',monospace;color:#718077;letter-spacing:.8px;margin-top:3px}.quest{position:absolute;z-index:490;top:calc(104px + env(safe-area-inset-top));left:12px;width:min(250px,68vw);padding:12px;border:1px solid white;border-radius:14px;background:#fffdf2ed;box-shadow:0 4px 17px #29442b22}.quest>small{font:9px 'DM Mono',monospace;color:#678357}.quest>b{display:block;font-size:13px;margin:5px 0 2px}.quest p{font-size:10px;line-height:1.35;color:#718077;margin:0 0 8px}.bar{height:5px;border-radius:6px;background:#e4e9de;overflow:hidden}.bar i{display:block;width:0;height:100%;background:#89b653;transition:width .3s}.qfoot{display:flex;justify-content:space-between;margin-top:6px;color:#718077;font:9px 'DM Mono',monospace}.gps{position:absolute;z-index:490;top:calc(195px + env(safe-area-inset-top));left:12px;background:#fffdf1ed;border:1px solid white;border-radius:18px;padding:7px 9px;box-shadow:0 3px 10px #29442b18;display:flex;align-items:center;gap:6px;font-size:9px;color:#58675b}.gps i{width:7px;height:7px;border-radius:50%;background:#d39a49}.gps i.ok{background:#72a849}.mapcontrols{position:absolute;right:12px;top:50%;z-index:490;transform:translateY(-45%);display:grid;gap:7px}.mapcontrols button{height:40px;width:40px;border:1px solid white;border-radius:13px;background:#fffdf1ed;color:#29442d;box-shadow:0 3px 12px #29442b20;font-size:19px}.bottom{position:absolute;z-index:500;bottom:0;left:0;right:0;padding:58px 12px calc(14px + env(safe-area-inset-bottom));min-height:150px;background:linear-gradient(transparent,#f3f5eb 32%);display:flex;justify-content:center;align-items:end;gap:8px}.start{border:0;border-radius:28px;background:#19291f;color:#d4f779;box-shadow:0 7px 20px #17251f45;padding:15px 19px;min-width:190px;font-weight:800;font-size:12px;cursor:pointer}.start.running{background:#a74c3c;color:white}.pause{display:none;width:48px;height:48px;border:0;border-radius:50%;background:white;font-size:17px;box-shadow:0 5px 17px #17251f2a}.pause.show{display:block}.hint{position:absolute;left:14px;bottom:calc(25px + env(safe-area-inset-bottom));font-size:9px;color:#526550;line-height:1.45}.hint b{color:#28442f}.runinfo{display:none;position:absolute;z-index:490;left:50%;transform:translateX(-50%);bottom:calc(87px + env(safe-area-inset-bottom));border:1px solid white;border-radius:15px;background:#fffdf2ed;box-shadow:0 5px 17px #29442b20;padding:9px 13px;gap:20px;white-space:nowrap}.runinfo.show{display:flex}.runinfo div{display:flex;align-items:baseline;gap:3px}.runinfo small{font:8px 'DM Mono',monospace;color:#718077}.runinfo b{font-size:14px}.profile{display:none;position:absolute;z-index:700;right:12px;top:calc(57px + env(safe-area-inset-top));width:min(300px,calc(100vw - 24px));padding:16px;border-radius:17px;background:#fffdf4;border:1px solid white;box-shadow:0 12px 35px #203b2e42}.profile.open{display:block}.close{float:right;border:0;background:none;font-size:21px}.pfhead{display:flex;align-items:center;gap:10px;border-bottom:1px solid #e6e9df;padding-bottom:12px}.pfhead>span{display:grid;place-items:center;width:43px;height:43px;border-radius:50%;background:#e4d4c3;font-size:22px}.pfhead b{font-size:13px}.pfhead small{display:block;font-size:10px;color:#718077;margin-top:4px}.stats{display:grid;grid-template-columns:repeat(3,1fr);text-align:center;padding:14px 0}.stats b,.stats small{display:block}.stats b{font-size:17px}.stats small{font-size:9px;color:#718077}.saved{border-top:1px solid #e6e9df;padding-top:10px;font-size:10px;line-height:1.5;color:#718077}.toast{position:absolute;z-index:800;left:50%;bottom:calc(114px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;transition:.22s;background:#19291f;color:white;border-radius:11px;padding:11px 15px;box-shadow:0 6px 18px #17251f44;font-size:11px;white-space:nowrap;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.toast b{color:#d4f779}.message{display:none;position:absolute;z-index:1000;left:50%;top:50%;transform:translate(-50%,-50%);width:min(310px,88vw);padding:18px;border-radius:16px;text-align:center;background:#fffdf4;box-shadow:0 8px 30px #203b2e48}.message.show{display:block}.message>b{font-size:14px}.message p{font-size:11px;line-height:1.5;color:#718077}.message button{border:0;background:#19291f;color:#d4f779;border-radius:18px;padding:9px 17px;font-weight:700}.leaflet-popup-content-wrapper{border-radius:12px}.leaflet-popup-content{font-size:11px}.territory{stroke:#628a3e;stroke-width:2;fill:#c5ec8b;fill-opacity:.4}.route{stroke:#467e48;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}.@media(min-width:650px){.app{max-width:480px;margin:auto;box-shadow:0 0 45px #31473136}.bottom{max-width:480px;left:50%;transform:translateX(-50%);width:100%}.quest,.gps{left:calc(50% - 228px)}.mapcontrols{right:calc(50% - 228px)}}
-  </style>
- </head>
- <body>
-  <main class="app">
-   <div id="map">
-   </div>
-   <div class="file-notice" id="fileNotice">
-    Street map preview needs a web address.
-    <br/>
-    Open this on GitHub Pages (HTTPS) to load the map and enable phone GPS.
-   </div>
-   <header>
-    <div class="brand">
-     <i>
-      ↗
-     </i>
-     GROUND
-    </div>
-    <div class="right">
-     <span class="xp">
-      ✦
-      <b id="xp">
-       0
-      </b>
-      XP
-     </span>
-     <button aria-label="Player profile" class="avatar" id="profileBtn">
-      🏃
-     </button>
-    </div>
-   </header>
-   <div class="area">
-    <b id="area">
-     Your real-world map
-    </b>
-    <small>
-     WALK · DRAW · CLAIM
-    </small>
-   </div>
-   <section class="quest">
-    <small>
-     ✦ TODAY'S QUEST
-    </small>
-    <b>
-     Draw a new territory
-    </b>
-    <p>
-     Complete a loop by returning near your starting point.
-    </p>
-    <div class="bar">
-     <i id="questbar">
-     </i>
-    </div>
-    <div class="qfoot">
-     <span id="lapCount">
-      0 laps today
-     </span>
-     <span>
-      +120 XP
-     </span>
-    </div>
-   </section>
-   <div class="gps">
-    <i id="gpsdot">
-    </i>
-    <span id="gpsText">
-     Location not started
-    </span>
-   </div>
-   <div class="mapcontrols">
-    <button aria-label="Zoom in" id="zoomIn">
-     +
-    </button>
-    <button aria-label="Zoom out" id="zoomOut">
-     −
-    </button>
-    <button aria-label="Find my location" id="locate">
-     ◎
-    </button>
-   </div>
-   <div class="runinfo" id="runinfo">
-    <div>
-     <small>
-      DISTANCE
-     </small>
-     <b id="distance">
-      0.00
-     </b>
-     <small>
-      km
-     </small>
-    </div>
-    <div>
-     <small>
-      TIME
-     </small>
-     <b id="time">
-      00:00
-     </b>
-    </div>
-    <div>
-     <small>
-      AREA
-     </small>
-     <b id="areaSize">
-      —
-     </b>
-    </div>
-   </div>
-   <div class="bottom">
-    <div class="hint">
-     Your walking path appears on the map.
-     <br/>
-     <b>
-      Loop back to claim the enclosed area.
-     </b>
-    </div>
-    <button class="start" id="start">
-     ▶   START WALKING
-    </button>
-    <button aria-label="Pause" class="pause" id="pause">
-     Ⅱ
-    </button>
-   </div>
-   <section class="profile" id="profile">
-    <button class="close" id="closeProfile">
-     ×
-    </button>
-    <div class="pfhead">
-     <span>
-      🏃
-     </span>
-     <div>
-      <b>
-       Trailblazer
-      </b>
-      <small>
-       Every loop creates your territory
-      </small>
-     </div>
-    </div>
-    <div class="stats">
-     <div>
-      <b id="statLaps">
-       0
-      </b>
-      <small>
-       laps captured
-      </small>
-     </div>
-     <div>
-      <b id="statKm">
-       0.0
-      </b>
-      <small>
-       km walked
-      </small>
-     </div>
-     <div>
-      <b id="statArea">
-       0
-      </b>
-      <small>
-       m² owned
-      </small>
-     </div>
-    </div>
-    <div class="saved" id="savedNote">
-     Your routes and claimed areas are saved on this device.
-    </div>
-   </section>
-   <div class="toast" id="toast">
-   </div>
-   <div class="message" id="message">
-    <b id="msgTitle">
-     Enable phone location
-    </b>
-    <p id="msgBody">
-     GROUND needs GPS permission to show the real map centered on you and draw your walk.
-    </p>
-    <button id="msgButton">
-     OK
-    </button>
-   </div>
-  </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
-  <script>
-   (()=>{
-const $=id=>document.getElementById(id), saved=JSON.parse(localStorage.getItem('groundGame')||'{"xp":0,"laps":0,"km":0,"territories":[]}');
-const map=L.map('map',{zoomControl:false,attributionControl:true,preferCanvas:true}).setView([20.5937,78.9629],5);
-if(location.protocol==='file:')document.getElementById('fileNotice').classList.add('show');else L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
-let marker=null,accuracy=null,watch=null,active=false,paused=false,points=[],line=null,startPoint=null,lastPoint=null,meters=0,startedAt=0,timer=null,areas=[];
-function sync(){localStorage.setItem('groundGame',JSON.stringify(saved));$('xp').textContent=saved.xp;$('lapCount').textContent=`${saved.laps} lap${saved.laps===1?'':'s'} captured`;$('statLaps').textContent=saved.laps;$('statKm').textContent=saved.km.toFixed(1);$('statArea').textContent=Math.round(saved.territories.reduce((n,t)=>n+t.area,0)).toLocaleString();$('questbar').style.width=Math.min(100,saved.laps%4/3*100)+'%';$('savedNote').textContent=`${saved.laps} lap${saved.laps===1?'':'s'} captured · ${saved.km.toFixed(1)} km walked · saved only on this device.`}
-function tell(msg){$('toast').innerHTML=msg;$('toast').classList.add('show');clearTimeout(tell.t);tell.t=setTimeout(()=>$('toast').classList.remove('show'),3100)}
-function setGps(text,ok=false){$('gpsText').textContent=text;$('gpsdot').classList.toggle('ok',ok)}
-function message(title,body,button='OK',action){$('msgTitle').textContent=title;$('msgBody').textContent=body;$('msgButton').textContent=button;$('message').classList.add('show');$('msgButton').onclick=()=>{$('message').classList.remove('show');if(action)action()}}
-function dist(a,b){const R=6371000,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dn=r(b.lng-a.lng),q=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dn/2)**2;return 2*R*Math.atan2(Math.sqrt(q),Math.sqrt(1-q))}
-function polygonArea(ps){const lat0=ps.reduce((s,p)=>s+p.lat,0)/ps.length,cos=Math.cos(lat0*Math.PI/180),xy=ps.map(p=>[p.lng*111320*cos,p.lat*110540]);let sum=0;for(let i=0,j=xy.length-1;i<xy.length;j=i++)sum+=xy[j][0]*xy[i][1]-xy[i][0]*xy[j][1];return Math.abs(sum/2)}
-function showTerritories(){areas.forEach(a=>a.remove());areas=[];saved.territories.forEach(t=>areas.push(L.polygon(t.points.map(p=>[p.lat,p.lng]),{className:'territory',color:'#57883d',weight:2,fillColor:'#b9e97e',fillOpacity:.44}).addTo(map).bindPopup(`<b>Your territory!</b><br>${Math.round(t.area)} m² claimed`)))}
-function pointUpdate(p,acc){if(!marker){marker=L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:'<div style="width:22px;height:22px;background:#294a34;border:4px solid white;border-radius:50%;box-shadow:0 0 0 8px #d4f77977,0 2px 8px #1c392c55"></div>',iconSize:[22,22],iconAnchor:[11,11]}),zIndexOffset:1000}).addTo(map);accuracy=L.circle([p.lat,p.lng],{radius:acc,color:'#7e9e59',weight:1,fillColor:'#c9ea9d',fillOpacity:.12}).addTo(map);map.setView([p.lat,p.lng],17)}else{marker.setLatLng([p.lat,p.lng]);accuracy.setLatLng([p.lat,p.lng]);accuracy.setRadius(acc)}$('area').textContent=`${p.lat.toFixed(4)}°, ${p.lng.toFixed(4)}°`}
-function getLocation(ok){if(!navigator.geolocation){message('GPS not available','This browser does not support location services. Try opening the game in Safari or Chrome.');return}setGps('Finding your GPS…');navigator.geolocation.getCurrentPosition(pos=>{const p={lat:pos.coords.latitude,lng:pos.coords.longitude};$('message').classList.remove('show');setGps(`GPS ready · ±${Math.round(pos.coords.accuracy)} m`,true);pointUpdate(p,pos.coords.accuracy);if(ok)ok(p)},err=>{setGps(err.code===1?'Location permission needed':'GPS unavailable');if(err.code===1)message('Allow location access','The browser needs your permission to show your real location and draw your route. Turn on Location for this site in your browser settings, then try again.','Try again',()=>getLocation(ok));else message('Could not find GPS','Check that Location Services are enabled and try again.','Try again',()=>getLocation(ok))},{enableHighAccuracy:true,timeout:16000,maximumAge:0})}
-function drawPath(){if(line)line.remove();if(points.length>1)line=L.polyline(points.map(p=>[p.lat,p.lng]),{color:'#477d40',weight:5,opacity:.95,lineCap:'round',lineJoin:'round'}).addTo(map)}
-function updateTimer(){const sec=Math.floor((Date.now()-startedAt)/1000),mm=String(Math.floor(sec/60)).padStart(2,'0'),ss=String(sec%60).padStart(2,'0');$('time').textContent=`${mm}:${ss}`}
-function captureLap(){const poly=[...points,{...startPoint}],area=polygonArea(poly);if(area<250){tell('Keep walking a bigger loop before claiming this area.');return false}const territory={points:poly,area,created:Date.now()};saved.territories.push(territory);saved.laps++;saved.xp+=120;showTerritories();sync();tell(`🏆 <b>Lap complete — territory captured!</b> +120 XP`);points=[{...startPoint}];meters=0;lastPoint={...startPoint};$('distance').textContent='0.00';$('areaSize').textContent='—';drawPath();return true}
-function position(pos){const p={lat:pos.coords.latitude,lng:pos.coords.longitude},acc=pos.coords.accuracy;pointUpdate(p,acc);setGps(`GPS active · ±${Math.round(acc)} m`,true);if(!active)return;if(paused){lastPoint=p;return}if(acc>65){setGps(`Weak GPS · ±${Math.round(acc)} m`,false);return}if(!startPoint){startPoint={...p};lastPoint={...p};points=[{...p}];drawPath();map.setView([p.lat,p.lng],18);return}const d=dist(lastPoint,p);if(d>=2&&d<100){meters+=d;points.push(p);lastPoint=p;drawPath();$('distance').textContent=(meters/1000).toFixed(2);$('areaSize').textContent=`${Math.round(polygonArea(points)).toLocaleString()} m²`;map.panTo([p.lat,p.lng],{animate:true,duration:.35});if(points.length>=5&&meters>=200&&dist(p,startPoint)<=32){captureLap()}}else if(d>=100){lastPoint=p}}
-function begin(){if(!navigator.geolocation){getLocation();return}active=true;paused=false;points=[];startPoint=null;lastPoint=null;meters=0;startedAt=Date.now();$('runinfo').classList.add('show');$('start').classList.add('running');$('start').innerHTML='■ &nbsp; END WALK';$('pause').classList.add('show');$('pause').textContent='Ⅱ';$('distance').textContent='0.00';$('time').textContent='00:00';$('areaSize').textContent='—';timer=setInterval(updateTimer,500);if(watch!==null)navigator.geolocation.clearWatch(watch);watch=navigator.geolocation.watchPosition(position,()=>setGps('GPS signal lost',false),{enableHighAccuracy:true,maximumAge:1000,timeout:15000});setGps('Waiting for GPS fix…')}
-function end(){if(!active)return;active=false;paused=false;clearInterval(timer);if(watch!==null){navigator.geolocation.clearWatch(watch);watch=null}const km=meters/1000;saved.km+=km;sync();$('runinfo').classList.remove('show');$('pause').classList.remove('show');$('start').classList.remove('running');$('start').innerHTML='▶ &nbsp; START WALKING';if(km>.02)tell(`🚶 <b>Walk saved!</b> ${km.toFixed(2)} km · ${saved.laps} territories total`);else tell('Walk ended. Complete a loop to claim territory.');points=[];startPoint=null;lastPoint=null}
-$('start').onclick=()=>active?end():getLocation(()=>begin());$('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'▶':'Ⅱ';setGps(paused?'Walk paused':'GPS active',true)};$('zoomIn').onclick=()=>map.zoomIn();$('zoomOut').onclick=()=>map.zoomOut();$('locate').onclick=()=>marker?map.setView(marker.getLatLng(),18):getLocation();$('profileBtn').onclick=()=>$('profile').classList.toggle('open');$('closeProfile').onclick=()=>$('profile').classList.remove('open');
-sync();showTerritories();
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="theme-color" content="#203a2d">
+    <title>
+      LANDRUSH — Run. Loop. Claim.
+    </title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@500;600;700;800;900&display=swap');
+* {
+  box-sizing:border-box
+}
+html,body {
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  font-family:'DM Sans',Arial,sans-serif;
+  color:#19291f;
+  background:#dce8d7
+}
+.app {
+  height:100%;
+  height:100dvh;
+  position:relative;
+  overflow:hidden
+}
+#map {
+  position:absolute;
+  inset:0;
+  background:#dce8d7;
+  z-index:0
+}
+.leaflet-container {
+  font:inherit;
+  background:#dce8d7
+}
+.file-notice {
+  display:none;
+  position:absolute;
+  z-index:400;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(310px,84vw);
+  padding:16px;
+  text-align:center;
+  line-height:1.55;
+  font-size:12px;
+  font-weight:600;
+  color:#28442f;
+  background:#fffdf2ed;
+  border:1px solid white;
+  border-radius:15px;
+  box-shadow:0 5px 18px #29442b20
+}
+.file-notice.show {
+  display:block
+}
+.leaflet-tile {
+  filter:saturate(.78) sepia(.05)
+}
+.leaflet-control-attribution {
+  font-size:9px!important
+}
+.leaflet-control-zoom {
+  display:none
+}
+header {
+  position:absolute;
+  z-index:500;
+  top:0;
+  left:0;
+  right:0;
+  padding:calc(12px + env(safe-area-inset-top)) 14px 42px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:linear-gradient(#eff5ebee,transparent);
+  pointer-events:none
+}
+header>* {
+  pointer-events:auto
+}
+.brand {
+  font-weight:800;
+  letter-spacing:-.5px;
+  font-size:16px;
+  text-shadow:0 1px white
+}
+.brand i {
+  display:inline-grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#19291f;
+  color:#d4f779;
+  font-style:normal;
+  margin-right:4px
+}
+.right {
+  display:flex;
+  align-items:center;
+  gap:8px
+}
+.xp,.avatar {
+  border:1px solid white;
+  background:#fffdf1ed;
+  box-shadow:0 3px 12px #29442b20
+}
+.xp {
+  border-radius:18px;
+  padding:9px 11px;
+  font-size:11px
+}
+.avatar {
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  font-size:18px
+}
+.area {
+  position:absolute;
+  z-index:490;
+  top:calc(54px + env(safe-area-inset-top));
+  left:50%;
+  transform:translateX(-50%);
+  white-space:nowrap;
+  text-align:center;
+  background:#fffdf1ed;
+  border:1px solid white;
+  border-radius:20px;
+  padding:7px 13px;
+  box-shadow:0 3px 12px #29442b20
+}
+.area b,.area small {
+  display:block
+}
+.area b {
+  font-size:11px
+}
+.area small {
+  font:8px 'DM Mono',monospace;
+  color:#718077;
+  letter-spacing:.8px;
+  margin-top:3px
+}
+.quest {
+  position:absolute;
+  z-index:490;
+  top:calc(104px + env(safe-area-inset-top));
+  left:12px;
+  width:min(250px,68vw);
+  padding:12px;
+  border:1px solid white;
+  border-radius:14px;
+  background:#fffdf2ed;
+  box-shadow:0 4px 17px #29442b22
+}
+.quest>small {
+  font:9px 'DM Mono',monospace;
+  color:#678357
+}
+.quest>b {
+  display:block;
+  font-size:13px;
+  margin:5px 0 2px
+}
+.quest p {
+  font-size:10px;
+  line-height:1.35;
+  color:#718077;
+  margin:0 0 8px
+}
+.bar {
+  height:5px;
+  border-radius:6px;
+  background:#e4e9de;
+  overflow:hidden
+}
+.bar i {
+  display:block;
+  width:0;
+  height:100%;
+  background:#89b653;
+  transition:width .3s
+}
+.qfoot {
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  color:#718077;
+  font:9px 'DM Mono',monospace
+}
+.gps {
+  position:absolute;
+  z-index:490;
+  top:calc(195px + env(safe-area-inset-top));
+  left:12px;
+  background:#fffdf1ed;
+  border:1px solid white;
+  border-radius:18px;
+  padding:7px 9px;
+  box-shadow:0 3px 10px #29442b18;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:9px;
+  color:#58675b
+}
+.gps i {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#d39a49
+}
+.gps i.ok {
+  background:#72a849
+}
+.mapcontrols {
+  position:absolute;
+  right:12px;
+  top:50%;
+  z-index:490;
+  transform:translateY(-45%);
+  display:grid;
+  gap:7px
+}
+.mapcontrols button {
+  height:40px;
+  width:40px;
+  border:1px solid white;
+  border-radius:13px;
+  background:#fffdf1ed;
+  color:#29442d;
+  box-shadow:0 3px 12px #29442b20;
+  font-size:19px
+}
+.bottom {
+  position:absolute;
+  z-index:500;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:58px 12px calc(14px + env(safe-area-inset-bottom));
+  min-height:150px;
+  background:linear-gradient(transparent,#f3f5eb 32%);
+  display:flex;
+  justify-content:center;
+  align-items:end;
+  gap:8px
+}
+.start {
+  border:0;
+  border-radius:28px;
+  background:#19291f;
+  color:#d4f779;
+  box-shadow:0 7px 20px #17251f45;
+  padding:15px 19px;
+  min-width:190px;
+  font-weight:800;
+  font-size:12px;
+  cursor:pointer
+}
+.start.running {
+  background:#a74c3c;
+  color:white
+}
+.pause {
+  display:none;
+  width:48px;
+  height:48px;
+  border:0;
+  border-radius:50%;
+  background:white;
+  font-size:17px;
+  box-shadow:0 5px 17px #17251f2a
+}
+.pause.show {
+  display:block
+}
+.hint {
+  position:absolute;
+  left:14px;
+  bottom:calc(25px + env(safe-area-inset-bottom));
+  font-size:9px;
+  color:#526550;
+  line-height:1.45
+}
+.hint b {
+  color:#28442f
+}
+.runinfo {
+  display:none;
+  position:absolute;
+  z-index:490;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:calc(87px + env(safe-area-inset-bottom));
+  border:1px solid white;
+  border-radius:15px;
+  background:#fffdf2ed;
+  box-shadow:0 5px 17px #29442b20;
+  padding:9px 13px;
+  gap:20px;
+  white-space:nowrap
+}
+.runinfo.show {
+  display:flex
+}
+.runinfo div {
+  display:flex;
+  align-items:baseline;
+  gap:3px
+}
+.runinfo small {
+  font:8px 'DM Mono',monospace;
+  color:#718077
+}
+.runinfo b {
+  font-size:14px
+}
+.profile {
+  display:none;
+  position:absolute;
+  z-index:700;
+  right:12px;
+  top:calc(57px + env(safe-area-inset-top));
+  width:min(300px,calc(100vw - 24px));
+  padding:16px;
+  border-radius:17px;
+  background:#fffdf4;
+  border:1px solid white;
+  box-shadow:0 12px 35px #203b2e42
+}
+.profile.open {
+  display:block
+}
+.close {
+  float:right;
+  border:0;
+  background:none;
+  font-size:21px
+}
+.pfhead {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid #e6e9df;
+  padding-bottom:12px
+}
+.pfhead>span {
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:#e4d4c3;
+  font-size:22px
+}
+.pfhead b {
+  font-size:13px
+}
+.pfhead small {
+  display:block;
+  font-size:10px;
+  color:#718077;
+  margin-top:4px
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  text-align:center;
+  padding:14px 0
+}
+.stats b,.stats small {
+  display:block
+}
+.stats b {
+  font-size:17px
+}
+.stats small {
+  font-size:9px;
+  color:#718077
+}
+.saved {
+  border-top:1px solid #e6e9df;
+  padding-top:10px;
+  font-size:10px;
+  line-height:1.5;
+  color:#718077
+}
+.toast {
+  position:absolute;
+  z-index:800;
+  left:50%;
+  bottom:calc(114px + env(safe-area-inset-bottom));
+  transform:translate(-50%,12px);
+  opacity:0;
+  transition:.22s;
+  background:#19291f;
+  color:white;
+  border-radius:11px;
+  padding:11px 15px;
+  box-shadow:0 6px 18px #17251f44;
+  font-size:11px;
+  white-space:nowrap;
+  pointer-events:none
+}
+.toast.show {
+  opacity:1;
+  transform:translate(-50%,0)
+}
+.toast b {
+  color:#d4f779
+}
+.message {
+  display:none;
+  position:absolute;
+  z-index:1000;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:min(310px,88vw);
+  padding:18px;
+  border-radius:16px;
+  text-align:center;
+  background:#fffdf4;
+  box-shadow:0 8px 30px #203b2e48
+}
+.message.show {
+  display:block
+}
+.message>b {
+  font-size:14px
+}
+.message p {
+  font-size:11px;
+  line-height:1.5;
+  color:#718077
+}
+.message button {
+  border:0;
+  background:#19291f;
+  color:#d4f779;
+  border-radius:18px;
+  padding:9px 17px;
+  font-weight:700
+}
+.leaflet-popup-content-wrapper {
+  border-radius:12px
+}
+.leaflet-popup-content {
+  font-size:11px
+}
+.territory {
+  stroke:#628a3e;
+  stroke-width:2;
+  fill:#c5ec8b;
+  fill-opacity:.4
+}
+.route {
+  stroke:#467e48;
+  stroke-width:5;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+@media(min-width:650px) {
+  .app {
+    max-width:480px;
+    margin:auto;
+    box-shadow:0 0 45px #31473136
+  }
+  .bottom {
+    max-width:480px;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%
+  }
+  .quest,.gps {
+    left:calc(50% - 228px)
+  }
+  .mapcontrols {
+    right:calc(50% - 228px)
+  }
+}
+/* LANDRUSH game look */
+html,body {
+  font-family:'Nunito',Arial,sans-serif;
+  background:#d7ebc6;
+  color:#233d31
+}
+.brand {
+  font-family:'Baloo 2','Nunito',sans-serif;
+  font-size:19px;
+  font-weight:800;
+  color:#28452f
+}
+.brand i {
+  background:#294a34;
+  color:#ffe16e;
+  border:2px solid #fff;
+  box-shadow:0 3px 0 #9cbf79
+}
+.xp {
+  font-family:'Baloo 2',sans-serif;
+  font-size:13px;
+  background:#ffe17b;
+  border:2px solid #fff;
+  border-radius:18px;
+  box-shadow:0 3px 0 #ceb45f
+}
+.avatar {
+  border:3px solid white;
+  background:#ffb28b;
+  box-shadow:0 3px 0 #c77a60
+}
+.area {
+  border:2px solid white;
+  border-radius:17px;
+  background:#fff7d8;
+  box-shadow:0 4px 0 #d8c995
+}
+.area b {
+  font:700 13px 'Baloo 2',sans-serif
+}
+.quest {
+  background:#fff5cf;
+  border:2px solid white;
+  border-radius:19px;
+  box-shadow:0 5px 0 #d9c786,0 8px 18px #29442b20;
+  padding:13px
+}
+.quest>small {
+  display:inline-block;
+  padding:4px 7px;
+  border-radius:10px;
+  background:#d9f39e;
+  color:#426638;
+  font-weight:900
+}
+.quest>b {
+  font:800 16px 'Baloo 2',sans-serif
+}
+.quest p {
+  font-size:11px;
+  color:#637363
+}
+.gps {
+  border:2px solid white;
+  border-radius:15px;
+  background:#e9f7d6;
+  box-shadow:0 3px 0 #bfd29d;
+  font-weight:800
+}
+.mapcontrols button {
+  border:2px solid white;
+  border-radius:13px;
+  background:#fff5cf;
+  box-shadow:0 3px 0 #d1c28d;
+  color:#294a34;
+  font-weight:900
+}
+.start {
+  font-family:'Baloo 2',sans-serif;
+  font-size:15px;
+  letter-spacing:.4px;
+  background:#ff7658;
+  color:#fff;
+  border:3px solid white;
+  border-radius:24px;
+  box-shadow:0 5px 0 #b94e3c,0 9px 18px #17251f2d;
+  padding:13px 19px;
+  text-shadow:0 1px #a74638
+}
+.start.running {
+  background:#41ae75;
+  box-shadow:0 5px 0 #277d51
+}
+.pause {
+  border:3px solid white;
+  background:#ffe17b;
+  box-shadow:0 4px 0 #d2b55d
+}
+.runinfo {
+  border:2px solid white;
+  border-radius:17px;
+  background:#fff7d8;
+  box-shadow:0 4px 0 #d8c995
+}
+.runinfo b {
+  font:800 17px 'Baloo 2',sans-serif
+}
+.profile {
+  border:2px solid white;
+  border-radius:22px;
+  background:#fff6d8;
+  box-shadow:0 7px 0 #d8c995
+}
+.pfhead>span {
+  background:#ffb28b;
+  border:2px solid white;
+  box-shadow:0 2px 0 #d5896c
+}
+.pfhead b,.stats b {
+  font-family:'Baloo 2',sans-serif
+}
+.toast {
+  border:2px solid white;
+  border-radius:16px;
+  background:#294a34;
+  box-shadow:0 4px 0 #152c20;
+  font-weight:800
+}
+.message {
+  border:3px solid white;
+  border-radius:21px;
+  background:#fff6d8;
+  box-shadow:0 7px 0 #d8c995
+}
+.message>b {
+  font:800 18px 'Baloo 2',sans-serif
+}
+.message button {
+  background:#ff7658;
+  color:white;
+  box-shadow:0 3px 0 #b94e3c
+}
+.leaflet-marker-icon,.leaflet-marker-shadow {
+  transition:transform .4s linear
+}
+.territory {
+  stroke:#57883d;
+  stroke-width:3;
+  fill:#b9e97e;
+  fill-opacity:.5
+}
+.splash {
+  position:absolute;
+  inset:0;
+  z-index:2000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  background:radial-gradient(ellipse at 50% 25%,#f5fac8 0,#def1b2 40%,#a8d985 100%);
+  transition:opacity .45s ease,visibility .45s ease
+}
+.splash.exit {
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none
+}
+.splash-sky {
+  position:relative;
+  width:min(430px,100%);
+  min-height:100%;
+  padding:calc(20px + env(safe-area-inset-top)) 24px calc(18px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  isolation:isolate
+}
+.splash-sky:before,.splash-sky:after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  border-radius:50%;
+  pointer-events:none
+}
+.splash-sky:before {
+  width:360px;
+  height:360px;
+  background:#fff5b3;
+  top:80px;
+  left:50%;
+  transform:translateX(-50%);
+  opacity:.65
+}
+.splash-sky:after {
+  width:145px;
+  height:145px;
+  background:#8fd4cc;
+  right:-68px;
+  top:40%;
+  opacity:.5
+}
+.splash-logo {
+  font:800 22px 'Baloo 2',sans-serif;
+  letter-spacing:1.3px;
+  color:#244532;
+  text-shadow:0 2px #fff;
+  display:flex;
+  align-items:center;
+  gap:7px
+}
+.splash-logo span {
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  color:#fff;
+  background:#294a34;
+  border:2px solid white;
+  box-shadow:0 3px 0 #82a864
+}
+.splash-art {
+  width:min(350px,92%);
+  height:clamp(205px,31vh,280px);
+  position:relative;
+  margin:11px auto 0;
+  filter:drop-shadow(0 9px 7px #31553020);
+  animation:floaty 3s ease-in-out infinite
+}
+.splash-art svg {
+  width:100%;
+  height:100%;
+  overflow:visible
+}
+.art-sticker {
+  position:absolute;
+  right:0;
+  top:17%;
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:7px 11px;
+  border:3px solid white;
+  border-radius:15px;
+  background:#ffde67;
+  color:#543f24;
+  box-shadow:0 4px 0 #c5a842;
+  font-size:14px;
+  transform:rotate(8deg)
+}
+.art-sticker b {
+  font:800 11px 'Baloo 2',sans-serif
+}
+.splash-copy {
+  margin-top:0
+}
+.eyebrow-game {
+  font:800 10px 'Nunito',sans-serif;
+  letter-spacing:2px;
+  color:#557d49
+}
+.splash-copy h1 {
+  font:800 clamp(34px,9vw,46px)/.99 'Baloo 2',sans-serif;
+  letter-spacing:-1.4px;
+  color:#234431;
+  margin:7px 0 5px
+}
+.splash-copy h1 em {
+  font-style:normal;
+  color:#f16f53
+}
+.splash-copy p {
+  font-size:13px;
+  line-height:1.45;
+  font-weight:700;
+  color:#58705a;
+  margin:9px 0
+}
+.splash-bottom {
+  margin-top:auto;
+  width:min(315px,100%);
+  padding-top:10px
+}
+.loading-text {
+  font:800 9px 'Nunito',sans-serif;
+  letter-spacing:1.1px;
+  color:#678059;
+  height:17px;
+  display:flex;
+  gap:4px;
+  align-items:center;
+  justify-content:center
+}
+.loading-text i {
+  width:5px;
+  height:5px;
+  background:#f2785b;
+  border-radius:50%;
+  animation:bounce .65s infinite alternate
+}
+.loading-text i:nth-child(2) {
+  animation-delay:.14s
+}
+.loading-text i:nth-child(3) {
+  animation-delay:.28s
+}
+.enter {
+  width:100%;
+  border:3px solid #fff;
+  border-radius:23px;
+  background:#ff7658;
+  color:white;
+  padding:13px 18px;
+  box-shadow:0 5px 0 #bd503e,0 9px 15px #31553020;
+  font:800 17px 'Baloo 2',sans-serif;
+  letter-spacing:.7px;
+  cursor:pointer;
+  transition:transform .15s,filter .15s
+}
+.enter span {
+  margin-left:8px;
+  font-size:20px
+}
+.enter:active:not(:disabled) {
+  transform:translateY(3px);
+  box-shadow:0 2px 0 #bd503e
+}
+.enter:disabled {
+  filter:grayscale(.4);
+  opacity:.68;
+  cursor:wait
+}
+.splash-foot {
+  font:800 8px 'Nunito',sans-serif;
+  color:#6b805e;
+  letter-spacing:1.5px;
+  margin-top:13px
+}
+.cloud {
+  position:absolute;
+  width:61px;
+  height:20px;
+  border-radius:20px;
+  background:#fff9;
+  top:19%
+}
+.cloud:before,.cloud:after {
+  content:'';
+  position:absolute;
+  bottom:3px;
+  border-radius:50%;
+  background:inherit
+}
+.cloud:before {
+  width:25px;
+  height:25px;
+  left:9px
+}
+.cloud:after {
+  width:17px;
+  height:17px;
+  left:29px
+}
+.cloud-a {
+  left:1%;
+  transform:scale(.8)
+}
+.cloud-b {
+  right:1%;
+  top:34%;
+  transform:scale(.65)
+}
+.spark {
+  position:absolute;
+  color:#f0a741;
+  font-size:25px;
+  animation:twinkle 1.3s infinite alternate
+}
+.spark-a {
+  left:8%;
+  top:36%
+}
+.spark-b {
+  right:12%;
+  top:15%;
+  animation-delay:.5s
+}
+@keyframes floaty {
+  50% {
+    transform:translateY(-5px)
+  }
+}
+@keyframes bounce {
+  to {
+    transform:translateY(-4px);
+    opacity:.55
+  }
+}
+@keyframes twinkle {
+  to {
+    transform:scale(.65) rotate(22deg);
+    opacity:.55
+  }
+}
+@media(max-height:700px) {
+  .splash-sky {
+    padding-top:calc(10px + env(safe-area-inset-top));
+    padding-bottom:calc(10px + env(safe-area-inset-bottom))
+  }
+  .splash-art {
+    height:clamp(150px,26vh,195px);
+    margin-top:2px
+  }
+  .splash-copy h1 {
+    font-size:34px
+  }
+  .splash-copy p {
+    font-size:11px;
+    margin:6px
+  }
+  .splash-logo {
+    font-size:19px
+  }
+}
+.journal {
+  background:#83d9dc;
+  color:#21433e;
+  border:3px solid white;
+  box-shadow:0 3px 0 #55a9aa;
+  font-size:16px
+}
+.profile {
+  max-height:84dvh;
+  overflow-y:auto;
+  overscroll-behavior:contain
+}
+.level-strip {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 0;
+  border-bottom:1px solid #e6e9df
+}
+.level-badge {
+  font:800 12px 'Baloo 2',sans-serif;
+  color:#fff;
+  background:#294a34;
+  border-radius:11px;
+  padding:4px 8px;
+  white-space:nowrap
+}
+.level-track {
+  height:9px;
+  flex:1;
+  background:#e2e8d7;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid white
+}
+.level-track i {
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,#ffbd55,#ff7658);
+  border-radius:10px;
+  transition:width .35s
+}
+.level-strip>small {
+  font:800 8px 'Nunito',sans-serif;
+  color:#72806e;
+  white-space:nowrap
+}
+.mission-board,.theme-board {
+  margin-top:11px;
+  padding:11px;
+  background:#fff0c6;
+  border:2px solid white;
+  border-radius:16px;
+  box-shadow:0 3px 0 #dccb91
+}
+.board-title {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:7px;
+  color:#34533a;
+  font:800 11px 'Baloo 2',sans-serif
+}
+.board-title small {
+  font:800 7px 'Nunito',sans-serif;
+  color:#87917a;
+  letter-spacing:.5px
+}
+.mission-row {
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  align-items:center;
+  gap:8px;
+  padding:7px 2px;
+  border-top:1px dashed #dfd4a9;
+  font-size:10px;
+  color:#52654e
+}
+.mission-row b {
+  font-weight:900;
+  color:#344d39
+}
+.mission-row>span:nth-child(2) {
+  font:800 9px 'DM Mono',monospace
+}
+.mission-row em {
+  font:800 8px 'Nunito',sans-serif;
+  color:#e27653;
+  font-style:normal
+}
+.theme-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:6px
+}
+.theme-choice {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  min-width:0;
+  padding:7px 2px;
+  border:2px solid #fff;
+  border-radius:12px;
+  background:#fffdf5;
+  color:#486049;
+  font:800 9px 'Nunito',sans-serif;
+  box-shadow:0 2px 0 #dfd6b5;
+  cursor:pointer
+}
+.theme-choice i {
+  width:21px;
+  height:21px;
+  border-radius:50%;
+  background:var(--swatch);
+  border:2px solid white;
+  box-shadow:0 1px 3px #5556
+}
+.theme-choice small {
+  font:800 7px 'DM Mono',monospace;
+  color:#7b8875
+}
+.theme-choice.active {
+  outline:2px solid #ff8c60;
+  background:#fff2d9;
+  transform:translateY(-1px)
+}
+.theme-choice.locked {
+  filter:grayscale(.7);
+  opacity:.55
+}
+.theme-message {
+  font-size:9px;
+  color:#74806c;
+  text-align:center;
+  margin-top:7px
+}
+.token-marker {
+  width:36px;
+  height:36px;
+  border:3px solid white;
+  border-radius:50%;
+  background:#ffdc66;
+  display:grid;
+  place-items:center;
+  box-shadow:0 3px 0 #bd9641,0 5px 12px #29442b35;
+  font-size:18px;
+  animation:tokenBob 1.5s ease-in-out infinite alternate
+}
+.rival-marker {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:4px 7px;
+  border:2px solid white;
+  border-radius:13px;
+  background:#ff9875;
+  box-shadow:0 3px 0 #bf654b;
+  font:800 9px 'Baloo 2',sans-serif;
+  color:#583628;
+  white-space:nowrap
+}
+.rival-marker.beaten {
+  background:#b7e879;
+  box-shadow:0 3px 0 #76a34f
+}
+.rival-zone {
+  stroke:#d87858;
+  stroke-width:3;
+  fill:#f5a17d;
+  fill-opacity:.32;
+  stroke-dasharray:7 4
+}
+.rival-zone.beaten {
+  stroke-dasharray:none;
+  stroke-width:2
+}
+.territory.capture-pop {
+  animation:territoryPop .8s cubic-bezier(.2,.8,.3,1) both
+}
+.territory-reveal {
+  display:none;
+  position:absolute;
+  z-index:850;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.88);
+  width:min(330px,88vw);
+  padding:20px 18px 17px;
+  text-align:center;
+  border:3px solid white;
+  border-radius:24px;
+  background:#fff5cf;
+  box-shadow:0 8px 0 #cfbc79,0 18px 45px #142c2870;
+  overflow:hidden
+}
+.territory-reveal.show {
+  display:block;
+  animation:revealIn .38s cubic-bezier(.2,1.4,.4,1) forwards
+}
+.reveal-close {
+  position:absolute;
+  right:10px;
+  top:7px;
+  border:0;
+  background:#ffffffa8;
+  border-radius:50%;
+  width:29px;
+  height:29px;
+  font-size:19px;
+  color:#4e654a
+}
+.reveal-spark {
+  position:absolute;
+  left:16px;
+  top:15px;
+  color:#f2ae39;
+  font-size:25px;
+  animation:twinkle .7s infinite alternate
+}
+.reveal-icon {
+  font-size:39px;
+  filter:drop-shadow(0 3px 0 #d3bd7d);
+  margin:2px auto 0
+}
+.territory-reveal>small {
+  display:block;
+  margin-top:4px;
+  color:#618451;
+  font:900 9px 'Nunito',sans-serif;
+  letter-spacing:1.5px
+}
+.territory-reveal h2 {
+  margin:1px 0 10px;
+  color:#294a34;
+  font:800 25px 'Baloo 2',sans-serif
+}
+.reveal-stats {
+  display:flex;
+  justify-content:center;
+  gap:12px
+}
+.reveal-stats span {
+  min-width:105px;
+  padding:8px;
+  background:#fffdf1;
+  border:2px solid white;
+  border-radius:13px;
+  box-shadow:0 3px 0 #e2d5aa
+}
+.reveal-stats b,.reveal-stats small {
+  display:block
+}
+.reveal-stats b {
+  font:800 19px 'Baloo 2',sans-serif;
+  color:#345d3c
+}
+.reveal-stats small {
+  font-size:9px;
+  color:#74806c
+}
+.reveal-extra {
+  margin:10px 0;
+  color:#6a765f;
+  font-size:10px;
+  font-weight:800
+}
+.reveal-ok {
+  width:100%;
+  border:3px solid white;
+  border-radius:18px;
+  background:#ff7658;
+  color:white;
+  padding:9px;
+  font:800 14px 'Baloo 2',sans-serif;
+  box-shadow:0 4px 0 #bd503e
+}
+@keyframes revealIn {
+  to {
+    transform:translate(-50%,-50%) scale(1)
+  }
+}
+@keyframes territoryPop {
+  0% {
+    fill-opacity:0;
+    stroke-width:8
+  }
+  70% {
+    fill-opacity:.75;
+    stroke-width:4
+  }
+  100% {
+    fill-opacity:.5;
+    stroke-width:3
+  }
+}
+@keyframes tokenBob {
+  to {
+    transform:translateY(-5px) rotate(8deg)
+  }
+}
+@media(max-width:360px) {
+  .mission-row {
+    gap:4px;
+    font-size:9px
+  }
+  .theme-choice {
+    font-size:8px
+  }
+  .profile {
+    padding:12px
+  }
+}
+.quest {
+  cursor:pointer
+}
+.quest:active {
+  transform:translateY(2px)
+}
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section id="splash" class="splash">
+        <div class="splash-sky">
+          <span class="spark spark-a">
+            ✦
+          </span>
+          <span class="spark spark-b">
+            ✧
+          </span>
+          <span class="cloud cloud-a">
+          </span>
+          <span class="cloud cloud-b">
+          </span>
+          <div class="splash-logo">
+            <span>
+              ↗
+            </span>
+            LANDRUSH
+          </div>
+          <div class="splash-art">
+            <svg viewBox="0 0 360 300" role="img" aria-label="A runner exploring a colorful map">
+              <path d="M30 211 Q72 133 136 166 T252 138 Q302 119 337 170 L337 274 30 274Z" fill="#9edc77"/>
+              <path d="M26 237 Q92 199 144 220T262 195Q306 182 344 207" fill="none" stroke="#e8ffb1" stroke-width="22" stroke-linecap="round"/>
+              <path d="M28 237 Q92 199 144 220T262 195Q306 182 344 207" fill="none" stroke="#fff9d8" stroke-width="7" stroke-linecap="round" stroke-dasharray="2 15"/>
+              <path d="M56 169l33-20 28 25-34 22z" fill="#ffe16e" stroke="#fff9d8" stroke-width="5"/>
+              <path d="M260 119l34-23 31 25-36 22z" fill="#ff8565" stroke="#fff9d8" stroke-width="5"/>
+              <path d="M210 169l29-20 30 23-31 22z" fill="#77d7dc" stroke="#fff9d8" stroke-width="5"/>
+              <circle cx="172" cy="103" r="36" fill="#f3b986"/>
+              <path d="M138 100q3-45 41-43 36 3 34 42-12-18-31-19-20 13-44 20" fill="#263d32"/>
+              <path d="M151 139q20-11 39 1l21 49-55 19-26-38z" fill="#ff745b" stroke="#fff8df" stroke-width="7" stroke-linejoin="round"/>
+              <path d="M163 193l-34 32-26-7m77-30 25 37 24 1" fill="none" stroke="#253c32" stroke-width="13" stroke-linecap="round"/>
+              <path d="M127 224l-27-4-12 12 37 5m119-9 25 5 7 13-41-8" fill="#ffe16e" stroke="#263d32" stroke-width="5" stroke-linejoin="round"/>
+              <path d="M154 157l-31 17-11 27m81-31 28 15 8 19" fill="none" stroke="#f3b986" stroke-width="12" stroke-linecap="round"/>
+              <path d="M108 98l8-14 8 14m174-40 7-13 8 13" fill="#fff7cf"/>
+              <path d="M50 95q11-23 25 0m206 89q13-25 27 0" fill="none" stroke="#4e8e4c" stroke-width="7" stroke-linecap="round"/>
+            </svg>
+            <div class="art-sticker">
+              🏁
+              <b>
+                NEW LAND!
+              </b>
+            </div>
+          </div>
+          <div class="splash-copy">
+            <div class="eyebrow-game">
+              YOUR STREETS. YOUR KINGDOM.
+            </div>
+            <h1>
+              Make the map
+              <br>
+              <em>
+                your playground.
+              </em>
+            </h1>
+            <p>
+              Walk a loop. Claim the land.
+              <br>
+              See how much of your world you can win.
+            </p>
+          </div>
+          <div class="splash-bottom">
+            <div id="loadingText" class="loading-text">
+              <i>
+              </i>
+              <i>
+              </i>
+              <i>
+              </i>
+              GETTING YOUR GAME READY
+            </div>
+            <button id="enterGame" class="enter" disabled>
+              ENTER LANDRUSH
+              <span>
+                ➜
+              </span>
+            </button>
+            <div class="splash-foot">
+              A LITTLE WALK CAN CLAIM A LOT.
+            </div>
+          </div>
+        </div>
+      </section>
+      <div id="map">
+      </div>
+      <div id="fileNotice" class="file-notice">
+        Street map preview needs a web address.
+        <br>
+        Open this on GitHub Pages (HTTPS) to load the map and enable phone GPS.
+      </div>
+      <header>
+        <div class="brand">
+          <i>
+            ↗
+          </i>
+          LANDRUSH
+        </div>
+        <div class="right">
+          <span class="xp">
+            ✦
+            <b id="xp">
+              0
+            </b>
+            XP
+          </span>
+          <button id="journalBtn" class="avatar journal" aria-label="Quests and territory styles">🎯</button>
+          <button id="profileBtn" class="avatar" aria-label="Player profile">
+            🏃
+          </button>
+        </div>
+      </header>
+      <div class="area">
+        <b id="area">
+          Your neighborhood
+        </b>
+        <small>
+          WALK · LOOP · CLAIM
+        </small>
+      </div>
+      <section id="questCard" class="quest" role="button" tabindex="0" title="Open daily quests">
+        <small>
+          ✦ TODAY'S QUEST
+        </small>
+        <b>
+          Draw a new territory
+        </b>
+        <p>
+          Loop, collect tokens, and challenge nearby rivals.
+        </p>
+        <div class="bar">
+          <i id="questbar">
+          </i>
+        </div>
+        <div class="qfoot">
+          <span id="lapCount">
+            0 laps today
+          </span>
+          <span>
+            UP TO +240 XP
+          </span>
+        </div>
+      </section>
+      <div class="gps">
+        <i id="gpsdot">
+        </i>
+        <span id="gpsText">
+          Location not started
+        </span>
+      </div>
+      <div class="mapcontrols">
+        <button id="zoomIn" aria-label="Zoom in">
+          +
+        </button>
+        <button id="zoomOut" aria-label="Zoom out">
+          −
+        </button>
+        <button id="locate" aria-label="Find my location">
+          ◎
+        </button>
+      </div>
+      <div class="runinfo" id="runinfo">
+        <div>
+          <small>
+            DISTANCE
+          </small>
+          <b id="distance">
+            0.00
+          </b>
+          <small>
+            km
+          </small>
+        </div>
+        <div>
+          <small>
+            TIME
+          </small>
+          <b id="time">
+            00:00
+          </b>
+        </div>
+        <div>
+          <small>
+            AREA
+          </small>
+          <b id="areaSize">
+            —
+          </b>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="hint">
+          Your walking path appears on the map.
+          <br>
+          <b>
+            Loop back to claim the enclosed area.
+          </b>
+        </div>
+        <button id="start" class="start">
+          ▶ &nbsp; START WALKING
+        </button>
+        <button id="pause" class="pause" aria-label="Pause">
+          Ⅱ
+        </button>
+      </div>
+      <section id="profile" class="profile">
+        <button id="closeProfile" class="close">
+          ×
+        </button>
+        <div class="pfhead">
+          <span>
+            🏃
+          </span>
+          <div>
+            <b>
+              Trailblazer
+            </b>
+            <small>
+              Every loop creates your territory
+            </small>
+          </div>
+        </div>
+        <div class="stats">
+          <div>
+            <b id="statLaps">
+              0
+            </b>
+            <small>
+              laps captured
+            </small>
+          </div>
+          <div>
+            <b id="statKm">
+              0.0
+            </b>
+            <small>
+              km walked
+            </small>
+          </div>
+          <div>
+            <b id="statArea">
+              0
+            </b>
+            <small>
+              m² owned
+            </small>
+          </div>
+        </div>
+
+        <div class="level-strip">
+          <span class="level-badge">LV <b id="levelValue">1</b></span>
+          <div class="level-track"><i id="levelBar"></i></div>
+          <small id="levelNext">0 / 300 XP</small>
+        </div>
+        <section class="mission-board">
+          <div class="board-title"><span>📜 DAILY BOUNTIES</span><small>RESET DAILY</small></div>
+          <div class="mission-row"><span>🔁 <b>Draw a territory</b></span><span id="missionLaps">0 / 1</span><em>+80 XP</em></div>
+          <div class="mission-row"><span>🪙 <b>Collect 3 tokens</b></span><span id="missionTokens">0 / 3</span><em>+60 XP</em></div>
+          <div class="mission-row"><span>🦊 <b>Beat a rival</b></span><span id="missionRivals">0 / 1</span><em>+100 XP</em></div>
+        </section>
+        <section class="theme-board">
+          <div class="board-title"><span>🎨 KINGDOM COLORS</span><small>UNLOCK AS YOU LEVEL UP</small></div>
+          <div class="theme-grid">
+            <button class="theme-choice" data-theme="meadow"><i style="--swatch:#91c957"></i><span>Meadow</span><small>LV 1</small></button>
+            <button class="theme-choice" data-theme="sunset"><i style="--swatch:#ff8061"></i><span>Sunset</span><small>LV 2</small></button>
+            <button class="theme-choice" data-theme="lagoon"><i style="--swatch:#55c4ce"></i><span>Lagoon</span><small>LV 3</small></button>
+            <button class="theme-choice" data-theme="royal"><i style="--swatch:#a27ae8"></i><span>Royal</span><small>LV 5</small></button>
+          </div>
+          <div id="themeMessage" class="theme-message">Claim territory to earn XP and unlock more colors.</div>
+        </section>
+        <div id="savedNote" class="saved">
+          Your routes and claimed areas are saved on this device.
+        </div>
+      </section>
+      <div id="toast" class="toast">
+      </div>
+      <div id="message" class="message">
+        <b id="msgTitle">
+          Enable phone location
+        </b>
+        <p id="msgBody">
+          GROUND needs GPS permission to show the real map centered on you and draw your walk.
+        </p>
+        <button id="msgButton">
+          OK
+        </button>
+      </div>
+
+      <section id="territoryReveal" class="territory-reveal" aria-live="polite">
+        <button id="closeReveal" class="reveal-close" aria-label="Close capture summary">×</button>
+        <div class="reveal-spark">✦</div>
+        <div class="reveal-icon" id="revealIcon">🏆</div>
+        <small id="revealTag">TERRITORY CAPTURED</small>
+        <h2 id="revealName">Your new land</h2>
+        <div class="reveal-stats"><span><b id="revealArea">0</b><small>m² claimed</small></span><span><b id="revealXp">+80</b><small>XP earned</small></span></div>
+        <div id="revealExtra" class="reveal-extra">Your kingdom just got bigger!</div>
+        <button id="revealOk" class="reveal-ok">AWESOME! ✨</button>
+      </section>
+    </main>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+      
+    </script>
+    <script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const storageKey = 'groundGame';
+  const today = () => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+  const freshDaily = () => ({ date: today(), laps: 0, tokens: 0, rivals: 0, paid: {} });
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { saved = {}; }
+  saved.xp ??= 0;
+  saved.laps ??= 0;
+  saved.km ??= 0;
+  saved.territories ??= [];
+  saved.theme ??= 'meadow';
+  saved.tokenClaims ??= [];
+  saved.daily ??= freshDaily();
+  if (saved.daily.date !== today()) saved.daily = freshDaily();
+  saved.daily.laps ??= 0;
+  saved.daily.tokens ??= 0;
+  saved.daily.rivals ??= 0;
+  saved.daily.paid ??= {};
+
+  const themes = {
+    meadow: { name: 'Meadow', level: 1, fill: '#b9e97e', stroke: '#57883d', icon: '🌿' },
+    sunset: { name: 'Sunset', level: 2, fill: '#ffad83', stroke: '#dc674d', icon: '🌅' },
+    lagoon: { name: 'Lagoon', level: 3, fill: '#78dbe0', stroke: '#298f9d', icon: '🐚' },
+    royal: { name: 'Royal', level: 5, fill: '#c6a2ff', stroke: '#8056bd', icon: '👑' }
+  };
+  const map = L.map('map', { zoomControl: false, attributionControl: true, preferCanvas: true })
+    .setView([20.5937, 78.9629], 5);
+  if (location.protocol === 'file:') $('fileNotice').classList.add('show');
+  else L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  let marker = null, accuracyCircle = null, watchId = null;
+  let active = false, paused = false, points = [], routeLayers = [];
+  let startPoint = null, lastPoint = null, filteredPoint = null, lastGpsAt = 0;
+  let meters = 0, startedAt = 0, timerId = null, territoryLayers = [], rivalLayers = [], tokenLayers = [];
+  let revealTimeout = null;
+
+  function persist() { localStorage.setItem(storageKey, JSON.stringify(saved)); }
+  function levelForXp(xp) { return Math.floor(xp / 300) + 1; }
+  function sync() {
+    const level = levelForXp(saved.xp);
+    $('xp').textContent = saved.xp;
+    $('lapCount').textContent = `${saved.laps} lap${saved.laps === 1 ? '' : 's'} captured`;
+    $('statLaps').textContent = saved.laps;
+    $('statKm').textContent = saved.km.toFixed(1);
+    $('statArea').textContent = Math.round(saved.territories.reduce((sum, t) => sum + t.area, 0)).toLocaleString();
+    $('levelValue').textContent = level;
+    $('levelBar').style.width = `${(saved.xp % 300) / 3}%`;
+    $('levelNext').textContent = `${saved.xp % 300} / 300 XP`;
+    const completedBounties = Number(Boolean(saved.daily.paid.laps)) + Number(Boolean(saved.daily.paid.tokens)) + Number(Boolean(saved.daily.paid.rivals));
+    const questProgress = Math.min(saved.daily.laps, 1) + Math.min(saved.daily.tokens / 3, 1) + Math.min(saved.daily.rivals, 1);
+    $('questbar').style.width = `${questProgress / 3 * 100}%`;
+    $('lapCount').textContent = `${completedBounties} / 3 bounties`;
+    $('missionLaps').textContent = `${Math.min(saved.daily.laps, 1)} / 1`;
+    $('missionTokens').textContent = `${Math.min(saved.daily.tokens, 3)} / 3`;
+    $('missionRivals').textContent = `${Math.min(saved.daily.rivals, 1)} / 1`;
+    $('savedNote').textContent = `${saved.laps} laps captured · ${saved.km.toFixed(1)} km walked · saved on this device.`;
+    $('themeMessage').textContent = `Level ${level} · ${saved.xp} total XP · earn XP to unlock colors.`;
+    document.querySelectorAll('.theme-choice').forEach(button => {
+      const theme = themes[button.dataset.theme];
+      const unlocked = level >= theme.level;
+      button.classList.toggle('active', button.dataset.theme === saved.theme);
+      button.classList.toggle('locked', !unlocked);
+      button.disabled = !unlocked;
+      button.title = unlocked ? `Use ${theme.name}` : `Unlock at level ${theme.level}`;
+    });
+    persist();
+  }
+  function toast(html) {
+    $('toast').innerHTML = html;
+    $('toast').classList.add('show');
+    clearTimeout(toast.timeout);
+    toast.timeout = setTimeout(() => $('toast').classList.remove('show'), 3000);
+  }
+  function setGps(text, good = false) {
+    $('gpsText').textContent = text;
+    $('gpsdot').classList.toggle('ok', good);
+  }
+  function showMessage(title, body, button = 'OK', action) {
+    $('msgTitle').textContent = title;
+    $('msgBody').textContent = body;
+    $('msgButton').textContent = button;
+    $('message').classList.add('show');
+    $('msgButton').onclick = () => { $('message').classList.remove('show'); if (action) action(); };
+  }
+  function distance(a, b) {
+    const rad = value => value * Math.PI / 180;
+    const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+    const q = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+    return 6371000 * 2 * Math.atan2(Math.sqrt(q), Math.sqrt(1 - q));
+  }
+  function offsetPoint(origin, north, east) {
+    return { lat: origin.lat + north / 110540, lng: origin.lng + east / (111320 * Math.cos(origin.lat * Math.PI / 180)) };
+  }
+  function squareAround(center, halfSide = 27) {
+    return [offsetPoint(center, halfSide, -halfSide), offsetPoint(center, halfSide, halfSide),
+      offsetPoint(center, -halfSide, halfSide), offsetPoint(center, -halfSide, -halfSide)];
+  }
+  function polygonArea(coords) {
+    const meanLat = coords.reduce((sum, p) => sum + p.lat, 0) / coords.length;
+    const xy = coords.map(p => [p.lng * 111320 * Math.cos(meanLat * Math.PI / 180), p.lat * 110540]);
+    let sum = 0;
+    for (let i = 0, j = xy.length - 1; i < xy.length; j = i++) sum += xy[j][0] * xy[i][1] - xy[i][0] * xy[j][1];
+    return Math.abs(sum / 2);
+  }
+  function pointInPolygon(point, polygon) {
+    let inside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const a = polygon[i], b = polygon[j];
+      const crosses = (a.lng > point.lng) !== (b.lng > point.lng) &&
+        point.lat < (b.lat - a.lat) * (point.lng - a.lng) / (b.lng - a.lng) + a.lat;
+      if (crosses) inside = !inside;
+    }
+    return inside;
+  }
+  function renderTerritories() {
+    territoryLayers.forEach(layer => layer.remove());
+    territoryLayers = [];
+    const theme = themes[saved.theme] || themes.meadow;
+    saved.territories.forEach(territory => {
+      const layer = L.polygon(territory.points.map(p => [p.lat, p.lng]), {
+        className: `territory${Date.now() - territory.created < 1200 ? ' capture-pop' : ''}`,
+        color: theme.stroke, weight: 3, fillColor: theme.fill, fillOpacity: 0.5
+      }).addTo(map);
+      layer.bindPopup(`<b>${territory.icon || theme.icon} ${territory.name || 'Your territory'}</b><br>${Math.round(territory.area).toLocaleString()} m² · ${theme.name}`);
+      territoryLayers.push(layer);
+    });
+  }
+  function renderRivals() {
+    rivalLayers.forEach(layer => layer.remove());
+    rivalLayers = [];
+    (saved.rivals || []).forEach(rival => {
+      const theme = themes[saved.theme] || themes.meadow;
+      const zone = L.polygon(squareAround(rival).map(p => [p.lat, p.lng]), {
+        className: `rival-zone${rival.beaten ? ' beaten' : ''}`, color: rival.beaten ? theme.stroke : '#d87858',
+        fillColor: rival.beaten ? theme.fill : '#f5a17d', fillOpacity: rival.beaten ? 0.5 : 0.32,
+        weight: 3, dashArray: rival.beaten ? null : '7 4'
+      }).addTo(map);
+      zone.bindPopup(`<b>${rival.beaten ? '🏁 ' + rival.name + ' defeated!' : rival.icon + ' ' + rival.name}</b><br>${rival.beaten ? 'This territory is yours.' : 'Complete a loop around this rival zone to challenge.'}`);
+      const icon = L.divIcon({ className: '', html: `<div class="rival-marker${rival.beaten ? ' beaten' : ''}">${rival.beaten ? '🏁' : rival.icon} ${rival.name}</div>`, iconSize: [88, 34], iconAnchor: [44, 17] });
+      const badge = L.marker([rival.lat, rival.lng], { icon, zIndexOffset: 300 }).addTo(map);
+      badge.bindPopup(zone.getPopup());
+      rivalLayers.push(zone, badge);
+    });
+  }
+  function renderTokens() {
+    tokenLayers.forEach(layer => layer.remove());
+    tokenLayers = [];
+    (saved.tokens || []).forEach(token => {
+      if (saved.tokenClaims.includes(token.id)) return;
+      const icon = L.divIcon({ className: '', html: '<div class="token-marker">🪙</div>', iconSize: [36, 36], iconAnchor: [18, 18] });
+      const badge = L.marker([token.lat, token.lng], { icon, zIndexOffset: 250 }).addTo(map);
+      badge.bindPopup('<b>Golden token!</b><br>Walk close to collect +25 XP.');
+      tokenLayers.push(badge);
+    });
+  }
+  function renderWorld() { renderTerritories(); renderRivals(); renderTokens(); }
+  function createWorld(origin) {
+    if (saved.worldHome && distance(saved.worldHome, origin) < 2500 && saved.rivals?.length && saved.tokens?.length) return;
+    saved.worldHome = origin;
+    saved.rivals = [
+      { id: 'fox', name: 'Foxy Finn', icon: '🦊', ...offsetPoint(origin, 95, 30), beaten: false },
+      { id: 'otter', name: 'Ollie Otter', icon: '🦦', ...offsetPoint(origin, -45, 105), beaten: false },
+      { id: 'crow', name: 'Captain Crow', icon: '🐦‍⬛', ...offsetPoint(origin, -100, -65), beaten: false }
+    ];
+    saved.tokens = [
+      { id: 'sun', ...offsetPoint(origin, 22, 35) }, { id: 'clover', ...offsetPoint(origin, 72, -38) },
+      { id: 'star', ...offsetPoint(origin, -26, 64) }, { id: 'shell', ...offsetPoint(origin, -78, -25) },
+      { id: 'spark', ...offsetPoint(origin, 112, 18) }
+    ];
+    saved.tokenClaims = [];
+    renderRivals();
+    renderTokens();
+    persist();
+  }
+  function updateMarker(point, accuracyMeters) {
+    if (!marker) {
+      const playerIcon = L.divIcon({ className: '', html: '<div style="width:24px;height:24px;background:#294a34;border:4px solid white;border-radius:50%;box-shadow:0 0 0 8px #d4f77977,0 2px 8px #1c392c55"></div>', iconSize: [24, 24], iconAnchor: [12, 12] });
+      marker = L.marker([point.lat, point.lng], { icon: playerIcon, zIndexOffset: 1000 }).addTo(map);
+      accuracyCircle = L.circle([point.lat, point.lng], { radius: accuracyMeters, color: '#7e9e59', weight: 1, fillColor: '#c9ea9d', fillOpacity: 0.12 }).addTo(map);
+      map.setView([point.lat, point.lng], 17);
+    } else {
+      marker.setLatLng([point.lat, point.lng]);
+      accuracyCircle.setLatLng([point.lat, point.lng]);
+      accuracyCircle.setRadius(accuracyMeters);
+    }
+    $('area').textContent = `${point.lat.toFixed(4)}°, ${point.lng.toFixed(4)}°`;
+    createWorld(point);
+  }
+  function getLocation(onReady) {
+    if (!navigator.geolocation) {
+      showMessage('GPS not available', 'This browser does not support location services. Try Safari or Chrome.');
+      return;
+    }
+    setGps('Finding your GPS…');
+    navigator.geolocation.getCurrentPosition(position => {
+      const point = { lat: position.coords.latitude, lng: position.coords.longitude };
+      $('message').classList.remove('show');
+      setGps(`GPS ready · ±${Math.round(position.coords.accuracy)} m`, true);
+      updateMarker(point, position.coords.accuracy);
+      if (onReady) onReady(point);
+    }, error => {
+      setGps(error.code === 1 ? 'Location permission needed' : 'GPS unavailable');
+      if (error.code === 1) showMessage('Allow location access', 'The browser needs location permission to put you on the map and track your walk.', 'TRY AGAIN', () => getLocation(onReady));
+      else showMessage('Could not find GPS', 'Check that Location Services are enabled and try again.', 'TRY AGAIN', () => getLocation(onReady));
+    }, { enableHighAccuracy: true, timeout: 16000, maximumAge: 0 });
+  }
+  function roundedRoute(route) {
+    if (route.length < 4) return route;
+    let result = route;
+    for (let pass = 0; pass < 2 && result.length < 1400; pass++) {
+      const next = [result[0]];
+      for (let i = 0; i < result.length - 1; i++) {
+        const a = result[i], b = result[i + 1];
+        next.push({ lat: a.lat * 0.75 + b.lat * 0.25, lng: a.lng * 0.75 + b.lng * 0.25 },
+          { lat: a.lat * 0.25 + b.lat * 0.75, lng: a.lng * 0.25 + b.lng * 0.75 });
+      }
+      next.push(result[result.length - 1]);
+      result = next;
+    }
+    return result;
+  }
+  function drawRoute() {
+    routeLayers.forEach(layer => layer.remove());
+    routeLayers = [];
+    if (points.length < 2) return;
+    const line = roundedRoute(points).map(p => [p.lat, p.lng]);
+    routeLayers.push(
+      L.polyline(line, { color: '#fff8de', weight: 13, opacity: 0.98, lineCap: 'round', lineJoin: 'round' }).addTo(map),
+      L.polyline(line, { color: '#ff7658', weight: 7, opacity: 1, lineCap: 'round', lineJoin: 'round' }).addTo(map)
+    );
+  }
+  function filterGps(raw, accuracyMeters, timestamp) {
+    if (accuracyMeters > 35) return null;
+    if (!filteredPoint) { filteredPoint = { ...raw }; lastGpsAt = timestamp; return filteredPoint; }
+    const elapsed = Math.max(0.5, Math.min(8, (timestamp - lastGpsAt) / 1000));
+    const jump = distance(filteredPoint, raw);
+    if (jump > Math.max(22, elapsed * 5 + Math.min(accuracyMeters, 12))) return null;
+    const deadband = Math.max(2.2, Math.min(5, accuracyMeters * 0.32));
+    if (jump < deadband) { lastGpsAt = timestamp; return filteredPoint; }
+    const alpha = accuracyMeters <= 8 ? 0.48 : 0.32;
+    filteredPoint = { lat: filteredPoint.lat + (raw.lat - filteredPoint.lat) * alpha, lng: filteredPoint.lng + (raw.lng - filteredPoint.lng) * alpha };
+    lastGpsAt = timestamp;
+    return filteredPoint;
+  }
+  function bounty(key, target, reward) {
+    if (saved.daily[key] < target) saved.daily[key]++;
+    if (saved.daily[key] >= target && !saved.daily.paid[key]) {
+      saved.daily.paid[key] = true;
+      saved.xp += reward;
+      return `Bounty complete (+${reward} XP)`;
+    }
+    return '';
+  }
+  function collectNearby(point) {
+    const token = (saved.tokens || []).find(item => !saved.tokenClaims.includes(item.id) && distance(point, item) <= 18);
+    if (!token) return;
+    saved.tokenClaims.push(token.id);
+    saved.xp += 25;
+    const reward = bounty('tokens', 3, 60);
+    sync();
+    renderTokens();
+    toast(`🪙 <b>Golden token!</b> +25 XP ${reward ? '· ' + reward : ''}`);
+  }
+  function updateTimer() {
+    const seconds = Math.floor((Date.now() - startedAt) / 1000);
+    $('time').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+  }
+  function challengeRival(polygon) {
+    const rival = (saved.rivals || []).find(item => !item.beaten && pointInPolygon(item, polygon));
+    if (!rival) return null;
+    rival.beaten = true;
+    return rival;
+  }
+  function showCapture(territory, xp, rival, bountyText) {
+    $('revealIcon').textContent = rival ? '🏆' : territory.icon;
+    $('revealTag').textContent = rival ? `RIVAL DEFEATED · ${rival.name.toUpperCase()}` : 'TERRITORY CAPTURED';
+    $('revealName').textContent = territory.name;
+    $('revealArea').textContent = Math.round(territory.area).toLocaleString();
+    $('revealXp').textContent = `+${xp}`;
+    $('revealExtra').textContent = rival ? `You took over ${rival.name}’s zone! ${bountyText}` : (bountyText || 'Your kingdom just got bigger!');
+    $('territoryReveal').classList.add('show');
+    clearTimeout(revealTimeout);
+    revealTimeout = setTimeout(() => $('territoryReveal').classList.remove('show'), 6500);
+  }
+  function captureLap() {
+    const polygon = [...points, { ...startPoint }];
+    const area = polygonArea(polygon);
+    if (area < 250) { toast('Make a wider loop to claim this territory.'); return; }
+    const rival = challengeRival(polygon);
+    const theme = themes[saved.theme] || themes.meadow;
+    const names = ['Clover Corner', 'Sunbeam Square', 'Lucky Loop', 'Parkside Patch', 'Trailblazer Bay'];
+    const territory = {
+      points: polygon, area, created: Date.now(),
+      name: rival ? `${rival.name.split(' ')[0]}’s Lookout` : names[saved.laps % names.length],
+      icon: rival ? '🏆' : theme.icon
+    };
+    saved.territories.push(territory);
+    saved.laps++;
+    saved.xp += 80;
+    let earned = 80;
+    const rewards = [bounty('laps', 1, 80)];
+    if (rival) { saved.xp += 100; earned += 100; rewards.push(bounty('rivals', 1, 100)); }
+    const bountyText = rewards.filter(Boolean).join(' · ');
+    earned += rewards.reduce((sum, text) => sum + (text.includes('+') ? Number(text.match(/\+(\d+)/)?.[1] || 0) : 0), 0);
+    renderWorld();
+    sync();
+    showCapture(territory, earned, rival, bountyText);
+    points = [{ ...startPoint }];
+    meters = 0;
+    lastPoint = { ...startPoint };
+    $('distance').textContent = '0.00';
+    $('areaSize').textContent = '—';
+    drawRoute();
+  }
+  function positionUpdate(position) {
+    const raw = { lat: position.coords.latitude, lng: position.coords.longitude };
+    const accuracyMeters = position.coords.accuracy;
+    const point = filterGps(raw, accuracyMeters, position.timestamp || Date.now());
+    if (!point) {
+      setGps(accuracyMeters > 35 ? `Waiting for clear GPS · ±${Math.round(accuracyMeters)} m` : 'Filtering a GPS jump…');
+      return;
+    }
+    updateMarker(point, accuracyMeters);
+    setGps(`GPS steady · ±${Math.round(accuracyMeters)} m`, true);
+    if (!active) return;
+    if (paused) { lastPoint = point; return; }
+    if (!startPoint) {
+      startPoint = { ...point };
+      lastPoint = { ...point };
+      points = [{ ...point }];
+      drawRoute();
+      map.setView([point.lat, point.lng], 18);
+      return;
+    }
+    const step = distance(lastPoint, point);
+    if (step >= 2.5 && step < 55) {
+      meters += step;
+      points.push(point);
+      lastPoint = point;
+      drawRoute();
+      $('distance').textContent = (meters / 1000).toFixed(2);
+      $('areaSize').textContent = `${Math.round(polygonArea(points)).toLocaleString()} m²`;
+      map.panTo([point.lat, point.lng], { animate: true, duration: 0.5 });
+      collectNearby(point);
+      if (points.length >= 5 && meters >= 200 && distance(point, startPoint) <= 28) captureLap();
+    } else if (step >= 55) setGps('Filtering a GPS jump…');
+  }
+  function beginWalk() {
+    active = true; paused = false; points = []; startPoint = null; lastPoint = null;
+    filteredPoint = null; lastGpsAt = 0; meters = 0; startedAt = Date.now();
+    $('runinfo').classList.add('show');
+    $('start').classList.add('running');
+    $('start').innerHTML = '■ &nbsp; END WALK';
+    $('pause').classList.add('show'); $('pause').textContent = 'Ⅱ';
+    $('distance').textContent = '0.00'; $('time').textContent = '00:00'; $('areaSize').textContent = '—';
+    timerId = setInterval(updateTimer, 500);
+    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    watchId = navigator.geolocation.watchPosition(positionUpdate, () => setGps('GPS signal lost'), {
+      enableHighAccuracy: true, maximumAge: 1000, timeout: 15000
+    });
+    setGps('Waiting for GPS fix…');
+  }
+  function endWalk() {
+    if (!active) return;
+    active = false; paused = false; clearInterval(timerId);
+    if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+    const km = meters / 1000;
+    saved.km += km;
+    sync();
+    $('runinfo').classList.remove('show'); $('pause').classList.remove('show'); $('start').classList.remove('running');
+    $('start').innerHTML = '▶ &nbsp; START WALKING';
+    toast(km > 0.02 ? `🚶 <b>Walk saved!</b> ${km.toFixed(2)} km` : 'Walk ended. Complete a loop to claim land.');
+    points = []; startPoint = null; lastPoint = null;
+  }
+  function chooseTheme(id) {
+    const theme = themes[id];
+    if (!theme || levelForXp(saved.xp) < theme.level) { toast('🔒 <b>Earn XP</b> to unlock that color.'); return; }
+    saved.theme = id;
+    renderTerritories(); sync();
+    toast(`🎨 <b>${theme.name} kingdom!</b> Your territories changed color.`);
+  }
+  $('start').onclick = () => active ? endWalk() : getLocation(() => beginWalk());
+  $('pause').onclick = () => {
+    paused = !paused;
+    $('pause').textContent = paused ? '▶' : 'Ⅱ';
+    setGps(paused ? 'Walk paused' : 'GPS steady', true);
+  };
+  $('zoomIn').onclick = () => map.zoomIn();
+  $('zoomOut').onclick = () => map.zoomOut();
+  $('locate').onclick = () => marker ? map.setView(marker.getLatLng(), 18) : getLocation();
+  $('profileBtn').onclick = () => $('profile').classList.toggle('open');
+  $('journalBtn').onclick = () => $('profile').classList.toggle('open');
+  $('closeProfile').onclick = () => $('profile').classList.remove('open');
+  $('questCard').onclick = () => $('profile').classList.add('open');
+  $('closeReveal').onclick = $('revealOk').onclick = () => $('territoryReveal').classList.remove('show');
+  document.querySelectorAll('.theme-choice').forEach(button => { button.onclick = () => chooseTheme(button.dataset.theme); });
+  sync(); renderWorld();
+  const splash = $('splash'), enter = $('enterGame'), loading = $('loadingText');
+  setTimeout(() => { enter.disabled = false; loading.textContent = 'YOUR MAP IS READY — LET’S PLAY!'; }, 1350);
+  enter.onclick = () => {
+    if (enter.disabled) return;
+    splash.classList.add('exit');
+    setTimeout(() => { splash.style.display = 'none'; map.invalidateSize(); }, 460);
+  };
 })();
-  </script>
- </body>
+
+    </script>
+  </body>
 </html>
 
